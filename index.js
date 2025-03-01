@@ -56,7 +56,7 @@ app.delete("/teas/:id", (req, res) => {
   }
   teaData.splice(idx, 1);
   nextId--;
-  res.status(202).send("Tea deleted!");
+  res.status(200).send("Tea deleted!");
 });
 
 app.listen(port, () => {
