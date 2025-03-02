@@ -22,14 +22,18 @@ app.post("/teas", (req, res) => {
 
 // list all the tea data available in the array
 app.get("/teas", (req, res) => {
-  res.status(200).send(teaData);
+  if (teaData.length) {
+    return res.status(200).send(teaData);
+  } else {
+    return res.status(404).send("Tea list empty");
+  }
 });
 
 // getting a single tea from the list by using the id
 app.get("/teas/:id", (req, res) => {
   const tea = teaData.find((t) => t.id === parseInt(req.params.id));
   if (!tea) {
-    return res.status(404).send("404 Not Found");
+    return res.status(404).send("Tea not found!!");
   } else {
     res.status(200).send(tea);
   }
@@ -39,7 +43,7 @@ app.get("/teas/:id", (req, res) => {
 app.put("/teas/:id", (req, res) => {
   const tea = teaData.find((t) => t.id === parseInt(req.params.id));
   if (!tea) {
-    return res.status(404).send("404 Not Found");
+    return res.status(404).send("Invalid tea Id");
   }
   // new values that we want to update we will get it from the req.body
   const { name, price } = req.body;
@@ -55,7 +59,11 @@ app.delete("/teas/:id", (req, res) => {
     return res.status(404).send("Tea not found");
   }
   teaData.splice(idx, 1);
-  nextId--;
+  if (teaData.length > 0) {
+    nextId = teaData[teaData.length - 1].id + 1;
+  } else if ((teaData.length = 0)) {
+    nextId = 1;
+  }
   res.status(200).send("Tea deleted!");
 });
 
